@@ -1,17 +1,29 @@
 <template>
-  <ZipcodeInput />
+   <div id="app" class="container">
+    <h1>Local Weather</h1>
+    <form @submit.prevent="fetchWeather" class="search-form">
+      <input v-model="zipcode" type="text" placeholder="Enter ZIP Code" class="search-input">
+      <button type="submit" class="search-button">Get Local Weather</button>
+    </form>
+
+    <div v-if="weather" class="weather-result">
+      <h2>Weather in {{ weather.location.name }}</h2>
+      <p>Temperature: {{ weather.current.temp }}°F</p>
+      <p>Humidity: {{ weather.current.humidity }}%</p>
+      <p>Condiditon: {{ weather.current.description }}</p>
+    </div>
+  </div>
 </template>
 
 <script>
-import ZipcodeInput from './ZipcodeInput';
 export default {
   name: 'App',
-  components: { ZipcodeInput },
   data() {
     return {
-      url: 'https://api.openweathermap.org/data/2.5/weather?zip=94040,us&units=imperial&appid=11a24d1bf1ec4d109feb2851bb6d1c97',
+      // url: 'https://api.openweathermap.org/data/2.5/weather?zip=94040,us&units=imperial&appid=11a24d1bf1ec4d109feb2851bb6d1c97',
       zipcode: '',
-      resultsContainer: '#weather-results',
+      weather: null
+      // resultsContainer: '#weather-results',
     }
   },
   methods: {
@@ -20,14 +32,13 @@ export default {
     },
     fetchWeather() {
       apiKey = '11a24d1bf1ec4d109feb2851bb6d1c97'
-      url = `https://api.openweathermap.org/data/2.5/weather?zip=94040,us&units=imperial&appid=${apiKey}`
+      url = `https://api.openweathermap.org/data/2.5/weather?zip=${this.zipcode},us&units=imperial&appid=${apiKey}`
       fetch(url)
         .then(response => response.json)
-        .then(data => console.log(data))
+        .then(data => (this.weather = data))
     }
   }
 }
-
 </script>
 
 
